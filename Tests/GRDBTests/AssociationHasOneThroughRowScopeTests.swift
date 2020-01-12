@@ -61,8 +61,8 @@ class AssociationHasOneThroughRowscopeTests: GRDBTestCase {
         let dbQueue = try makeDatabaseQueue()
         try dbQueue.inDatabase { db in
             let request = A.joining(required: A.defaultC)
-            let (_, adapter) = try request.prepare(db, forSingleResult: false)
-            XCTAssertNil(adapter)
+            let preparedRequest = try request.makePreparedRequest(db, forSingleResult: false)
+            XCTAssertNil(preparedRequest.adapter)
         }
     }
     

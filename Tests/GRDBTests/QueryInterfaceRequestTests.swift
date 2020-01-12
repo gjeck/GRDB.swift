@@ -44,8 +44,8 @@ class QueryInterfaceRequestTests: GRDBTestCase {
     func testSimpleRequestDoesNotUseAnyRowAdapter() throws {
         let dbQueue = try makeDatabaseQueue()
         try dbQueue.inDatabase { db in
-            let (_, adapter) = try Reader.all().prepare(db, forSingleResult: false)
-            XCTAssertNil(adapter)
+            let preparedRequest = try Reader.all().makePreparedRequest(db, forSingleResult: false)
+            XCTAssertNil(preparedRequest.adapter)
         }
     }
     

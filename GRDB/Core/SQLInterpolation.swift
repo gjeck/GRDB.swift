@@ -1,4 +1,3 @@
-#if swift(>=5.0)
 /// :nodoc:
 public struct SQLInterpolation: StringInterpolationProtocol {
     var context = SQLGenerationContext.literalGenerationContext(withArguments: true)
@@ -30,4 +29,3 @@ public struct SQLInterpolation: StringInterpolationProtocol {
         arguments += sqlLiteral.arguments
     }
 }
-#endif

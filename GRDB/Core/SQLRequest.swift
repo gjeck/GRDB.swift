@@ -160,7 +160,6 @@ public struct SQLRequest<T>: FetchRequest {
     }
 }
 
-#if swift(>=5.0)
 extension SQLRequest: ExpressibleByStringInterpolation {
     /// :nodoc
     public init(unicodeScalarLiteral: String) {
@@ -182,4 +181,3 @@ extension SQLRequest: ExpressibleByStringInterpolation {
         self.init(literal: SQLLiteral(stringInterpolation: sqlInterpolation))
     }
 }
-#endif

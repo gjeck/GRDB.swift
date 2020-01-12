@@ -51,60 +51,28 @@ TEST_ACTIONS = clean build build-for-testing test-without-building
 # When adding support for an Xcode version, look for available devices with `instruments -s devices`
 ifeq ($(XCODEVERSION),11.3)
   MAX_SWIFT_VERSION = 5.1
-  MIN_SWIFT_VERSION = 4.2
   MAX_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 11,OS=13.3"
   MIN_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 5,OS=10.3.1"
   MAX_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV 4K,OS=13.3"
   MIN_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV,OS=10.2"
 else ifeq ($(XCODEVERSION),11.2)
   MAX_SWIFT_VERSION = 5.1
-  MIN_SWIFT_VERSION = 4.2
   MAX_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 11,OS=13.2.2"
   MIN_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 5,OS=10.3.1"
   MAX_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV 4K,OS=13.2"
   MIN_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV,OS=10.2"
 else ifeq ($(XCODEVERSION),11.1)
   MAX_SWIFT_VERSION = 5.1
-  MIN_SWIFT_VERSION = 4.2
   MAX_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 11,OS=13.1"
   MIN_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 5,OS=10.3.1"
   MAX_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV 4K,OS=13.0"
   MIN_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV,OS=10.2"
 else ifeq ($(XCODEVERSION),11.0)
   MAX_SWIFT_VERSION = 5.1
-  MIN_SWIFT_VERSION = 4.2
   MAX_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 11,OS=13.0"
   MIN_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 5,OS=10.3.1"
   MAX_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV 4K,OS=13.0"
   MIN_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV,OS=10.2"
-else ifeq ($(XCODEVERSION),10.3)
-  MAX_SWIFT_VERSION = 5
-  MIN_SWIFT_VERSION = 4.2
-  MAX_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone X,OS=12.4"
-  MIN_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 5,OS=10.3.1"
-  MAX_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV 4K,OS=12.4"
-  MIN_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV,OS=10.2"
-else ifeq ($(XCODEVERSION),10.2)
-  MAX_SWIFT_VERSION = 5
-  MIN_SWIFT_VERSION = 4.2
-  MAX_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone X,OS=12.2"
-  MIN_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 4s,OS=9.0"
-  MAX_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV 4K,OS=12.2"
-  MIN_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV,OS=10.0"
-else ifeq ($(XCODEVERSION),10.1)
-  MAX_SWIFT_VERSION = 4.2
-  MAX_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone X,OS=12.1"
-  MIN_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 4s,OS=9.0"
-  MAX_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV 4K,OS=12.1"
-  MIN_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV,OS=10.0"
-else ifeq ($(XCODEVERSION),10.0)
-  MAX_SWIFT_VERSION = 4.2
-  MAX_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 8,OS=12.0"
-  MIN_IOS_DESTINATION = "platform=iOS Simulator,name=iPhone 4s,OS=9.0"
-  MAX_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV 4K,OS=12.0"
-  MIN_TVOS_DESTINATION = "platform=tvOS Simulator,name=Apple TV,OS=10.0"
-else
-  # Swift 4.1 required: Xcode < 9.3 is not supported
 endif
 
 # If xcpretty is available, use it for xcodebuild output
@@ -342,14 +310,12 @@ test_install_SPM: test_install_SPM_Package test_install_SPM_Project
 
 test_install_SPM_Package:
 	cd Tests/SPM/PlainPackage && \
-	( if [ -a .build ] && [ -a Package.resolved ]; then $(SWIFT) package reset; fi ) && \
-	rm -rf Packages/GRDB && \
-	$(SWIFT) package edit GRDB --revision master && \
-	rm -rf Packages/GRDB && \
-	ln -s ../../../.. Packages/GRDB && \
+	rm -f Package.resolved && \
+	$(SWIFT) package reset && \
+	$(SWIFT) package edit GRDB --path ../../.. && \
 	$(SWIFT) build && \
 	./.build/debug/SPM && \
-	$(SWIFT) package unedit --force GRDB
+	$(SWIFT) package unedit GRDB
 
 test_install_SPM_Project:
 	$(XCODEBUILD) \

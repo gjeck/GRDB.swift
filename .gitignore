@@ -107,7 +107,7 @@ Podfile.lock
 # SPM
 .build
 Package.resolved
-Tests/SPM/Packages
+Tests/SPM/PlainPackage/Packages
 
 # Ruby
 .ruby-version
